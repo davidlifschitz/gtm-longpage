@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LongPage — long JPG to PDF, files stay here</title>
+    <meta
+      name="description"
+      content="Drop a tall scan of many pages. Get a multi-page PDF. Nothing is uploaded."
+    />
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #1c1917;
+        --muted: #57534e;
+        --line: #e7e5e4;
+        --bg: #fafaf9;
+        --card: #ffffff;
+        --accent: #0f766e;
+        --warn: #9a3412;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+        line-height: 1.5;
+      }
+      main { max-width: 44rem; margin: 0 auto; padding: 4rem 1.5rem 5rem; }
+      h1 { font-size: 2rem; letter-spacing: -0.03em; margin: 0 0 0.75rem; }
+      h2 { font-size: 1.05rem; margin: 2rem 0 0.5rem; }
+      .kicker { color: var(--muted); font-size: 0.875rem; font-weight: 600; margin: 0 0 0.75rem; }
+      .lede { color: var(--muted); font-size: 1.125rem; max-width: 36rem; }
+      .drop {
+        margin: 2rem 0 1rem;
+        border: 1px dashed #d6d3d1;
+        border-radius: 1rem;
+        background: var(--card);
+        padding: 2rem 1.25rem;
+        text-align: center;
+      }
+      .drop.over { border-color: var(--accent); background: #f0fdfa; }
+      button {
+        appearance: none;
+        border: 0;
+        background: var(--ink);
+        color: white;
+        border-radius: 0.6rem;
+        padding: 0.6rem 1rem;
+        font: inherit;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      button.secondary { background: white; color: var(--ink); border: 1px solid var(--line); }
+      button:disabled { opacity: 0.45; cursor: not-allowed; }
+      .meta { color: var(--muted); font-size: 0.875rem; }
+      .row { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 1rem 0; justify-content: center; }
+      label { font-size: 0.875rem; color: var(--muted); }
+      input[type="number"] {
+        width: 5rem;
+        border: 1px solid var(--line);
+        border-radius: 0.5rem;
+        padding: 0.4rem 0.5rem;
+        font: inherit;
+      }
+      .thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.4rem; margin: 1rem 0; }
+      .thumbs img {
+        width: 100%;
+        border: 1px solid var(--line);
+        border-radius: 0.4rem;
+        background: white;
+      }
+      .cards { display: grid; gap: 0.75rem; grid-template-columns: 1fr; }
+      @media (min-width: 640px) { .cards { grid-template-columns: 1fr 1fr 1fr; } }
+      .cards article {
+        border: 1px solid var(--line);
+        border-radius: 0.9rem;
+        padding: 1rem;
+        background: var(--card);
+      }
+      .cards h2 { font-size: 1rem; margin: 0 0 0.4rem; }
+      .cards p { margin: 0; color: var(--muted); font-size: 0.875rem; }
+      footer {
+        margin-top: 3rem;
+        padding-top: 1.25rem;
+        border-top: 1px solid var(--line);
+        color: var(--muted);
+        font-size: 0.875rem;
+      }
+      a { color: inherit; }
+      .warn { color: var(--warn); font-size: 0.875rem; }
+      input[type="file"] { display: none; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="kicker">LongPage</p>
+      <h1>You already said the problem out loud.</h1>
+      <p class="lede">
+        “How can I turn a long jpg into multiple page pdf? I have a scan of a
+        digital book, and it’s a long picture with all the pages.” Drop it here.
+        Slice in this tab. Nothing is uploaded.
+      </p>
+
+      <div class="drop" id="drop">
+        <p><strong>Drop one tall JPG or PNG</strong></p>
+        <p class="meta">25 MB cap. Auto-finds white gutters, or split evenly. Max 60 pages.</p>
+        <div class="row">
+          <button type="button" id="pick">Choose image</button>
+        </div>
+        <input id="file" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" />
+      </div>
+
+      <p class="meta" id="status">Waiting for a tall scan.</p>
+      <p class="warn" id="error" hidden></p>
+      <div class="row" style="justify-content: flex-start; align-items: center;">
+        <label>Pages <input id="pages" type="number" min="2" max="60" value="2" /></label>
+        <button type="button" class="secondary" id="auto">Detect gutters</button>
+      </div>
+      <div class="thumbs" id="thumbs"></div>
+      <div class="row" style="justify-content: flex-start;">
+        <button type="button" id="run" disabled>Download PDF</button>
+      </div>
+
+      <section class="cards" style="margin-top: 2.5rem;">
+        <article>
+          <h2>The declaration is the qualifier</h2>
+          <p>If you already have every page stacked in one screenshot, you already know you need this.</p>
+        </article>
+        <article>
+          <h2>The PDF is the product</h2>
+          <p>White bands become cuts. If there are no bands, it splits by the page count you type.</p>
+        </article>
+        <article>
+          <h2>Built for the reply</h2>
+          <p>Someone posted the pain. This page is the answer. Try it in this tab, then send the URL back.</p>
+        </article>
+      </section>
+
+      <section>
+        <h2>Who this is for</h2>
+        <ul class="meta">
+          <li>A long phone-scan of a booklet</li>
+          <li>A web-to-image dump of a chapter</li>
+          <li>A screenshot taller than one page</li>
+        </ul>
+        <p class="warn">Cap is 60 pages in the browser. A 200-page strip may need to be cropped into batches first.</p>
+      </section>
+
+      <footer>
+        <a href="https://github.com/davidlifschitz/gtm-longpage">Source</a>
+        · Ask:
+        <a href="https://www.reddit.com/r/pdf/comments/1vsbtzj/how_can_i_turn_a_long_jpg_into_multiple_page_pdf/">r/pdf long JPG</a>
+        · 25 MB. No account. No cloud copy.
+      </footer>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
