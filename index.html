@@ -109,11 +109,11 @@
         <div class="row">
           <button type="button" id="pick">Choose image</button>
         </div>
-        <input id="file" type="file" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" />
+        <input id="file" type="file" aria-label="Choose a tall image" accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp" />
       </div>
 
-      <p class="meta" id="status">Waiting for a tall scan.</p>
-      <p class="warn" id="error" hidden></p>
+      <p class="meta" id="status" aria-live="polite">Waiting for a tall scan.</p>
+      <p class="warn" id="error" role="alert" hidden></p>
       <div class="row" style="justify-content: flex-start; align-items: center;">
         <label>Pages <input id="pages" type="number" min="2" max="60" value="2" /></label>
         <button type="button" class="secondary" id="auto">Detect gutters</button>
