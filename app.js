@@ -127,7 +127,7 @@ function paintThumbs() {
   els.thumbs.innerHTML = "";
   if (!img || !cuts.length) return;
   const w = img.naturalWidth;
-  cuts.slice(0, 8).forEach(([y0, y1]) => {
+  cuts.slice(0, 8).forEach(([y0, y1], i) => {
     const c = document.createElement("canvas");
     const h = Math.max(1, y1 - y0);
     const tw = 160;
@@ -137,7 +137,7 @@ function paintThumbs() {
     c.getContext("2d").drawImage(img, 0, y0, w, h, 0, 0, tw, th);
     const im = document.createElement("img");
     im.src = c.toDataURL("image/jpeg", 0.7);
-    im.alt = "page preview";
+    im.alt = `Page ${i + 1} of ${cuts.length} preview`;
     els.thumbs.appendChild(im);
   });
 }
