@@ -168,7 +168,13 @@ async function ingest(file) {
     setError(`${file.name} is over 25 MB.`);
     return;
   }
-  const image = await loadImage(file);
+  let image;
+  try {
+    image = await loadImage(file);
+  } catch (err) {
+    setError(`${file.name}: ${err.message} Try a JPG, PNG, or WebP.`);
+    return;
+  }
   if (image.naturalHeight < image.naturalWidth * 1.2) {
     setError("That image is not much taller than it is wide. This tool is for stacked pages.");
   }
