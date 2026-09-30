@@ -97,11 +97,19 @@ function detectCuts(image) {
   ys.push(h);
   const uniq = [...new Set(ys)].sort((a, b) => a - b);
   const slices = [];
+  // skip slivers, relative to a typical page so long strips of many pages still work
+  const gaps = uniq.slice(1).map((y, i) => y - uniq[i]).sort((a, b) => a - b);
+  const minGap = Math.min(h * 0.02, gaps[Math.floor(gaps.length / 2)] * 0.3);
   for (let i = 0; i < uniq.length - 1; i++) {
-    if (uniq[i + 1] - uniq[i] < h * 0.02) continue;
+    if (uniq[i + 1] - uniq[i] < minGap) continue;
     slices.push([uniq[i], uniq[i + 1]]);
   }
   if (slices.length < 2) return equalCuts(h, Number(els.pages.value) || 2);
+  if (slices.length > MAX_PAGES) {
+    setError(
+      `Found ${slices.length} pages. This PDF will have the first ${MAX_PAGES}; crop the rest into another batch.`
+    );
+  }
   return slices.slice(0, MAX_PAGES);
 }
 
